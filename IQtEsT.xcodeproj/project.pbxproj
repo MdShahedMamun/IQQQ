@@ -14,9 +14,9 @@
 		45B859041DED77030043F951 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45B859021DED77030043F951 /* LaunchScreen.storyboard */; };
 		45B8590F1DED77030043F951 /* IQtEsTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8590E1DED77030043F951 /* IQtEsTTests.swift */; };
 		45B8591A1DED77030043F951 /* IQtEsTUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B859191DED77030043F951 /* IQtEsTUITests.swift */; };
-		45B859281DEDAEBE0043F951 /* IQCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B859271DEDAEBE0043F951 /* IQCollectionViewController.swift */; };
 		45B8592A1DEDC4F20043F951 /* IQCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B859291DEDC4F20043F951 /* IQCollectionViewCell.swift */; };
 		45B8592C1DEDE7410043F951 /* IQTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B8592B1DEDE7410043F951 /* IQTest.swift */; };
+		45B859321DEF2B970043F951 /* IQTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B859311DEF2B970043F951 /* IQTestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,9 +50,9 @@
 		45B859151DED77030043F951 /* IQtEsTUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IQtEsTUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45B859191DED77030043F951 /* IQtEsTUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IQtEsTUITests.swift; sourceTree = "<group>"; };
 		45B8591B1DED77030043F951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		45B859271DEDAEBE0043F951 /* IQCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IQCollectionViewController.swift; sourceTree = "<group>"; };
 		45B859291DEDC4F20043F951 /* IQCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IQCollectionViewCell.swift; sourceTree = "<group>"; };
 		45B8592B1DEDE7410043F951 /* IQTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IQTest.swift; sourceTree = "<group>"; };
+		45B859311DEF2B970043F951 /* IQTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IQTestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +106,7 @@
 				45B858F61DED77030043F951 /* AppDelegate.swift */,
 				45B858FA1DED77030043F951 /* Main.storyboard */,
 				45B859291DEDC4F20043F951 /* IQCollectionViewCell.swift */,
-				45B859271DEDAEBE0043F951 /* IQCollectionViewController.swift */,
+				45B859311DEF2B970043F951 /* IQTestViewController.swift */,
 				45B859001DED77030043F951 /* Assets.xcassets */,
 				45B859021DED77030043F951 /* LaunchScreen.storyboard */,
 				45B859051DED77030043F951 /* Info.plist */,
@@ -265,8 +265,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45B859281DEDAEBE0043F951 /* IQCollectionViewController.swift in Sources */,
 				45B858F71DED77030043F951 /* AppDelegate.swift in Sources */,
+				45B859321DEF2B970043F951 /* IQTestViewController.swift in Sources */,
 				45B8592A1DEDC4F20043F951 /* IQCollectionViewCell.swift in Sources */,
 				45B8592C1DEDE7410043F951 /* IQTest.swift in Sources */,
 				45B858FF1DED77030043F951 /* IQtEsT.xcdatamodeld in Sources */,

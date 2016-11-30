@@ -15,7 +15,6 @@ class IQTest:NSManagedObject {
     @NSManaged var question:String;
     @NSManaged var correctAnswer:Int;
     @NSManaged var userAnswer:Int;
-    @NSManaged var score:Float;
     @NSManaged var option1value:String;
     @NSManaged var option2value:String;
 }

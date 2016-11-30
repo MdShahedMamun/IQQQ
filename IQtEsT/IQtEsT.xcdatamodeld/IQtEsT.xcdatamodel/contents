@@ -5,10 +5,9 @@
         <attribute name="option1value" attributeType="String" syncable="YES"/>
         <attribute name="option2value" attributeType="String" syncable="YES"/>
         <attribute name="question" attributeType="String" syncable="YES"/>
-        <attribute name="score" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="userAnswer" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="IQTest" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="IQTest" positionX="-63" positionY="-18" width="128" height="120"/>
     </elements>
 </model>
