@@ -48,7 +48,7 @@ class IQCollectionViewCell: UICollectionViewCell {
             currentCellFirstTap=false;
             userAnswer=sender.tag;
             print("sender.tag or userAnswer: \(userAnswer)");
-            
+            print("correctAnswerForThisCell: \(correctAnswerForThisCell)");
             // 4 combination for two option
             if correctAnswerForThisCell==1&&userAnswer==1{
                 print("case1");

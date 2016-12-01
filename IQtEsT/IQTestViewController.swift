@@ -14,22 +14,21 @@ UICollectionViewDataSource,NSFetchedResultsControllerDelegate,IQCollectionViewCe
     
     @IBOutlet var collectionView:UICollectionView!
     @IBOutlet var scoreLable:UILabel!;
+    @IBOutlet var resetButton:UIButton!;
     @IBOutlet weak var backgroundImageView:UIImageView!
     
     var iqTests:[IQTest] = []
     var fetchResultController:NSFetchedResultsController!
     var score:Float = 0.0;
     
+    var defaults=NSUserDefaults.standardUserDefaults();
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         
-        // comment this two line after first run
-//        score=0
-//        NSUserDefaults.standardUserDefaults().setFloat(score, forKey: "score");
-        
-        score=NSUserDefaults.standardUserDefaults().floatForKey("score");
+        score=defaults.floatForKey("score");
         print("score= \(score)");
         scoreLable.text=String(score);
         
@@ -47,41 +46,6 @@ UICollectionViewDataSource,NSFetchedResultsControllerDelegate,IQCollectionViewCe
             let flowLayout = collectionView!.collectionViewLayout as! UICollectionViewFlowLayout
             flowLayout.itemSize = CGSizeMake(250.0, 300.0)
         }
-        
-//        // prelaod data
-//        let a:Int=1;//In first run a=1 then a=2 for other run
-//        if a==1{
-//            let question="If 9^a=25 then 3^a=?"
-//            var correctAnswer:Int=1;
-//            let userAnswer:Int=0;
-//            let option1Value="4"
-//            let option2Value="5";
-//            
-//            var iqTest:IQTest!;
-//            
-//            for _ in 1...5{
-//                if let managedObjectContext = (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext {
-//                    iqTest = NSEntityDescription.insertNewObjectForEntityForName("IQTest", inManagedObjectContext: managedObjectContext) as! IQTest
-//                    iqTest.question=question
-//                    iqTest.correctAnswer=correctAnswer;
-//                    iqTest.option1value=option1Value;
-//                    iqTest.option2value=option2Value;
-//                    iqTest.userAnswer=userAnswer;
-//                    if correctAnswer==1{
-//                        correctAnswer=2;
-//                    }else {
-//                        correctAnswer=1;
-//                    }
-//                    
-//                    do {
-//                        try managedObjectContext.save()
-//                    } catch {
-//                        print(error)
-//                        return
-//                    }
-//                }
-//            }
-//        }
         
         // Load the iqTests from database
         let fetchRequest = NSFetchRequest(entityName: "IQTest")
@@ -103,7 +67,6 @@ UICollectionViewDataSource,NSFetchedResultsControllerDelegate,IQCollectionViewCe
                 print(error)
             }
         }
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -121,7 +84,36 @@ UICollectionViewDataSource,NSFetchedResultsControllerDelegate,IQCollectionViewCe
     }
     
     @IBAction func resetButtonTapped(sender:AnyObject){
-        // iqTests.count porjonto loop chaliye shobgulote userAnswer=0 kora ebong Score entity (Score name notun entity toiri kore) e score=0 kora
+        
+        // Reset in Data
+        // iqTests.count porjonto loop chaliye shobgulote userAnswer=0 ebong score=0 kora
+        for iqTest in iqTests{
+            iqTest.userAnswer=0;
+            defaults.setFloat(0, forKey: "score")
+        }
+        
+        // save the change in database (managedObjectContext)
+        if let managedObjectContext = (UIApplication.sharedApplication().delegate as? AppDelegate)?.managedObjectContext {
+            
+            do {
+                try managedObjectContext.save()
+            } catch {
+                print(error)
+            }
+        }
+        
+        //        // inefficient (First Way)
+        //        dismissViewControllerAnimated(true, completion: nil)
+        //        viewDidLoad()
+        
+        // (Second Way)
+        // Reset View to show the change of data.
+        // restart collection view
+        collectionView.reloadData();
+        // reset scoreLabel
+        score=defaults.floatForKey("score");
+        print("score= \(score)");
+        scoreLable.text=String(score);
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {

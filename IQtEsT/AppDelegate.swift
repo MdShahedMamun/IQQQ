@@ -11,53 +11,60 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
-
-
+    
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let isPreloaded = defaults.boolForKey("isPreloaded")
+        if !isPreloaded {
+            preloadData()
+            defaults.setFloat(0, forKey: "score");
+            defaults.setBool(true, forKey: "isPreloaded")
+            print(defaults.floatForKey("score"))
+        }
         return true
     }
-
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
-
+    
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
-
+    
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
-
+    
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
-
+    
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
     }
-
+    
     // MARK: - Core Data stack
-
+    
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.nought.IQtEsT" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         return urls[urls.count-1]
     }()
-
+    
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
         let modelURL = NSBundle.mainBundle().URLForResource("IQtEsT", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
     }()
-
+    
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
@@ -71,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             var dict = [String: AnyObject]()
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
-
+            
             dict[NSUnderlyingErrorKey] = error as NSError
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
@@ -82,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return coordinator
     }()
-
+    
     lazy var managedObjectContext: NSManagedObjectContext = {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
@@ -90,9 +97,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
-
+    
     // MARK: - Core Data Saving support
-
+    
     func saveContext () {
         if managedObjectContext.hasChanges {
             do {
@@ -106,6 +113,91 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
+    
+    
+    // MARK: - CSV Parser Methods
+    
+    func parseCSV (contentsOfURL: NSURL, encoding: NSStringEncoding) -> [(correctAnswer:String, option1value:String, option2value: String,question:String,userAnswer:String)]? {
+        
+        // Load the CSV file and parse it
+        let delimiter = ","
+        // tuple
+        var items:[(correctAnswer:String, option1value:String, option2value: String,question:String,userAnswer:String)]?
+        
+        do {
+            let content = try String(contentsOfURL: contentsOfURL, encoding: encoding)
+            print(content)
+            items = []
+            let lines:[String] = content.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet()) as [String]
+            
+            for line in lines {
+                var values:[String] = []
+                if line != "" {
+                    values = line.componentsSeparatedByString(delimiter);
+                    // Put the values into the tuple and add it to the items array
+                    let item = (correctAnswer: values[0], option1value: values[1], option2value: values[2], question: values[3],userAnswer: values[4])
+                    items?.append(item)
+                }
+            }
+        } catch {
+            print(error)
+        }
+        
+        return items
+    }
+    
+    // see book for loading file from server (google drive)
+    func preloadData () {
+        
+        // Load the data file. For any reasons it can't be loaded, we just return
+        guard let contentsOfURL = NSBundle.mainBundle().URLForResource("IQTest",withExtension: "csv") else {
+            return
+        }
+        
+        // Remove all the IQTest items before preloading
+        removeData()
+        
+        if let items = parseCSV(contentsOfURL, encoding: NSUTF8StringEncoding) {
+            // Preload the IQTest items
+            for item in items {
+                let iqTest = NSEntityDescription.insertNewObjectForEntityForName("IQTest", inManagedObjectContext: managedObjectContext) as! IQTest
+                iqTest.correctAnswer = Int(item.correctAnswer)!;
+                iqTest.option1value = item.option1value;
+                iqTest.option2value = item.option2value;
+                iqTest.question=item.question;
+                iqTest.correctAnswer=Int(item.correctAnswer)!;
+                print("inside preloadData()");
+                print(iqTest.option2value);
+                print(iqTest.question);
+                print(iqTest.correctAnswer)
+                print(iqTest.userAnswer)
+                do {
+                    try managedObjectContext.save()
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        
+    }
+    
+    func removeData () {
+        // Remove the existing items
+        let fetchRequest = NSFetchRequest(entityName: "IQTest")
+        
+        do {
+            let iqTests = try managedObjectContext.executeFetchRequest(fetchRequest) as! [IQTest]
+            for iqTest in iqTests {
+                managedObjectContext.deleteObject(iqTest)
+            }
+        } catch {
+            print(error)
+        }
+        
+    }
+    
+    
+    
 }
 
